@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: catalog
+  name: catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: catalog
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: catalog
+    spec:
+      containers:
+        - args:
+            - anchore-manager
+            - service
+            - start
+            - catalog
+          env:
+            - name: ANCHORE_ADMIN_PASSWORD
+              value: foobar
+            - name: ANCHORE_DB_HOST
+              value: db
+            - name: ANCHORE_DB_PASSWORD
+              value: mysecretpassword
+            - name: ANCHORE_ENDPOINT_HOSTNAME
+              value: catalog
+          image: anchore/anchore-engine:v1.0.0
+          name: catalog
+          ports:
+            - containerPort: 8228
+          resources: {}
+      restartPolicy: Always
+status: {}

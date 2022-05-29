@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: policy-engine
+  name: policy-engine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: policy-engine
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: policy-engine
+    spec:
+      containers:
+        - args:
+            - anchore-manager
+            - service
+            - start
+            - policy_engine
+          env:
+            - name: ANCHORE_ADMIN_PASSWORD
+              value: foobar
+            - name: ANCHORE_DB_HOST
+              value: db
+            - name: ANCHORE_DB_PASSWORD
+              value: mysecretpassword
+            - name: ANCHORE_ENDPOINT_HOSTNAME
+              value: policy-engine
+            - name: ANCHORE_VULNERABILITIES_PROVIDER
+              value: grype
+          image: anchore/anchore-engine:v1.0.0
+          name: policy-engine
+          ports:
+            - containerPort: 8228
+          resources: {}
+      restartPolicy: Always
+status: {}
